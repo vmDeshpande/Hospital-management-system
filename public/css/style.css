@@ -1,0 +1,162 @@
+body, h1, h2, p {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    line-height: 1.6;
+}
+
+header, footer {
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding: 1em 0;
+}
+
+main {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+nav {
+    background-color: #333;
+    overflow: hidden;
+    text-align: center;
+}
+
+nav a {
+    display: inline-block;
+    color: #f2f2f2;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+nav a:hover {
+    background-color: #ddd;
+    color: black;
+}
+
+input, select {
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+   }
+
+button {
+    padding: 10px 20px;
+    background-color: #007BFF;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+   
+button:hover {
+    background-color: #0056b3;
+}
+
+.doctors {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    margin-bottom: 10px;
+    background-color: #f8f9fa;
+    border-radius: 5px;
+   }
+   
+   .doctors .description {
+    margin-right: 10px;
+   }
+   
+   .doctors .age {
+    font-weight: bold;
+    color: #333;
+   }
+   
+   .doctors.income .age {
+    color: #28a745;
+   }
+   
+   .doctors.expense .age {
+    color: #dc3545;
+   }
+
+   .container {
+    margin: 0 auto;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+    padding: 20px;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  th,
+  td {
+    text-align: left;
+    padding: 8px;
+    border-bottom: 1px solid #ddd;
+  }
+  th {
+    background-color: #f2f2f2;
+  }
+  tbody tr:nth-child(even) {
+    background-color: #f2f2f2;
+  }
+  td:nth-child(1) {
+      width: 20%;
+    }
+    
+    td:nth-child(2) {
+      width: 15%;
+    }
+    
+    td:nth-child(3) {
+      width: 25%;
+    }
+    
+    td:nth-child(4) {
+      width: 20%;
+    }
+    
+    td:nth-child(5) {
+      width: 20%;
+    }
+    
+    td:nth-child(6) {
+      width: 20%;
+    }
+  td:nth-child(even) {
+    background-color: #f2f2f2;
+  }
+  td span {
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  td a {
+    color: #007bff;
+    text-decoration: none;
+  }
+  td a:hover {
+    text-decoration: underline;
+  }
+  .display{
+    display: table-row-group !important;
+  
+  }
