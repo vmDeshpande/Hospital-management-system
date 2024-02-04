@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/style.css">
+    <title>Hospital Management System</title>
+</head>
+<body>
+    <header>
+        <h1>Hospital Management System</h1>
+        <nav>
+            <a href="/pages/doctor.html">Doctor</a>
+            <a href="/pages/lab.html">Lab</a>
+            <a href="#">Receptionist</a>
+        </nav>
+    </header>
+    
+    <main>
+        <h2>Receptionist</h2>
+        <form action="/send" id="patientForm" method="post" onsubmit="submitForm(event)">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required><br>
+
+            <label for="age">Age:</label>
+            <input type="number" id="age" name="age" required><br>
+
+            <label for="issues">Issues:</label>
+            <input id="issues" name="issues" required></textarea><br>
+
+            <label for="doctorAssigned">Doctor Assigned:</label>
+            <input type="text" id="doctorAssigned" name="doctorAssigned" required><br>
+
+            <button type="submit">Register</button>
+        </form>
+        <div class="container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Doctor Name</th>
+                        <th>Specialization</th>
+                        <th>Patient ID</th>
+                        <th>Working Days</th>
+                    </tr>
+                </thead>
+                <tbody id="doctorDiv" class="display" style="display: table-row-group;">
+
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <script>
+        function submitForm(event) {
+            event.preventDefault();
+
+            fetch('/send', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    name: document.getElementById('name').value,
+                    age: document.getElementById('age').value,
+                    issues: document.getElementById('issues').value,
+                    lab_assigned: '',
+                    doctor_assigned: document.getElementById('doctorAssigned').value,
+                })
+            })
+            .then(response => response.json())
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred. Please try again.');
+            });
+        }
+    </script>
+     <script src="../js/scripts.js"></script>
+</body>
+</html>
