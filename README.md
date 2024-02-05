@@ -10,7 +10,6 @@ A simple Hospital Management System implemented using HTML, CSS, JavaScript (Nod
 - [Getting Started](#getting-started)
 - [Usage](#usage)
 - [Contributing](#contributing)
-- [License](#license)
 
 ## Overview
 
@@ -60,3 +59,30 @@ Hospital-Management-System/
 |-- .gitignore
 |-- package.json
 |-- README.md
+```
+## Getting Started
+1. Clone the repository:
+```
+git clone https://github.com/your-username/Hospital-Management-System.git
+cd Hospital-Management-System
+```
+2. Install dependencies:
+```
+npm install
+```
+3. Set up MongoDB:
+- Create a MongoDB Atlas account and set up a cluster.
+- Obtain the connection string and replace it in `app.js` and `labModel.js.`
+4. Run the application:
+```
+npm start
+```
+
+## Usage
+
+- Access the Hospital Management System at `http://localhost:3000` in your web browser.
+- Follow the provided forms to register patients, assign doctors and labs, fetch patient information, update lab assignments, and more.
+
+## Contributing
+
+Contributions are welcome! Please feel free to open issues or submit pull requests.
