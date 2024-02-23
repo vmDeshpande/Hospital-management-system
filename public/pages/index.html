@@ -3,39 +3,86 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@2.0.7/css/boxicons.min.css">
     <title>Hospital Management System</title>
 </head>
 <body>
-    <header>
-        <h1>Hospital Management System</h1>
-        <nav>
-            <a href="/pages/doctor.html">Doctor</a>
-            <a href="/pages/lab.html">Lab</a>
-            <a href="#">Receptionist</a>
-        </nav>
-    </header>
-    
-    <main>
-        <h2>Receptionist</h2>
-        <form action="/send" id="patientForm" method="post" onsubmit="submitForm(event)">
-            <label for="name">Name:</label>
-            <input type="text" id="name" name="name" required><br>
-
-            <label for="age">Age:</label>
-            <input type="number" id="age" name="age" required><br>
-
-            <label for="issues">Issues:</label>
-            <input id="issues" name="issues" required></textarea><br>
-
-            <label for="doctorAssigned">Doctor Assigned:</label>
-            <input type="text" id="doctorAssigned" name="doctorAssigned" required><br>
-
-            <button type="submit">Register</button>
-        </form>
+    <header class="bg-primary text-white py-3">
         <div class="container">
-            <table>
-                <thead>
+            <h1 class="mb-0">Hospital Management System</h1>
+        </div>
+    
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link text-light" href="/pages/home.html"><i class="fas fa-user-md"></i> Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-light" href="/pages/doctor.html"><i class="fas fa-user-md"></i> Doctor</a>
+                    </li>
+                    <li id="booking" class="nav-item">
+                        <a class="nav-link text-light" href="/pages/index.html"><i class="fas fa-user"></i> Book Appointment</a>
+                    </li>
+                    <li id="inventory" class="nav-item">
+                        <a class="nav-link text-light" href="/pages/inventory.html"><i class="fas fa-user"></i> Inventory</a>
+                    </li>
+                    <li id="registerLink" class="nav-item">
+                        <a class="nav-link text-light" href="/pages/register.html"><i class="fas fa-user-plus"></i> Register</a>
+                    </li>
+                    <li id="loginLink" class="nav-item">
+                        <a class="nav-link text-light" href="/pages/login.html"><i class="fas fa-sign-in-alt"></i> Login</a>
+                    </li>
+                    <li id="logoutButton" class="nav-item">
+                        <a class="nav-link text-light" href="#"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                    </li>                    
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
+    
+    <main class="container mt-4">
+        <h2 class="text-center">Book Appointment</h2>
+        <form action="/send" id="patientForm" method="post" onsubmit="submitForm(event)">
+            <div class="mb-3">
+                <label for="age" class="form-label">Age:</label>
+                <input type="number" class="form-control" id="age" name="age" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="issues" class="form-label">Issues:</label>
+                <input type="text" class="form-control" id="issues" name="issues" required>
+            </div>
+
+            <!-- City Dropdown -->
+            <div class="mb-3">
+                <label for="city" class="form-label">City:</label>
+                <select class="form-select" id="city" name="city" required>
+                    <option value="" disabled selected>Select City</option>
+                </select>
+            </div>
+            
+            <div class="mb-3">
+                <label for="hospital" class="form-label">Hospital:</label>
+                <select class="form-select" id="hospital" name="hospital" required>
+                    <option value="" disabled selected>Select Hospital</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-primary"><i class="fas fa-user-md"></i> Register</button>
+        </form>
+
+        <div class="container mt-4">
+            <h3>Available Doctors</h3>
+            <table class="table table-bordered">
+                <thead class="table-primary">
                     <tr>
                         <th>Doctor Name</th>
                         <th>Specialization</th>
@@ -43,37 +90,75 @@
                         <th>Working Days</th>
                     </tr>
                 </thead>
-                <tbody id="doctorDiv" class="display" style="display: table-row-group;">
-
+                <tbody id="doctorDiv" class="display">
+                    <!-- Data will be dynamically populated here using JavaScript -->
                 </tbody>
             </table>
         </div>
     </main>
 
     <script>
-        function submitForm(event) {
+        async function submitForm(event) {
             event.preventDefault();
 
-            fetch('/send', {
+            const response = await fetch('/send', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    name: document.getElementById('name').value,
                     age: document.getElementById('age').value,
                     issues: document.getElementById('issues').value,
-                    lab_assigned: '',
-                    doctor_assigned: document.getElementById('doctorAssigned').value,
+                    city: document.getElementById('city').value,
+                    hospital: document.getElementById('hospital').value,
                 })
             })
-            .then(response => response.json())
-            .catch(error => {
-                console.error('Error:', error);
-                alert('An error occurred. Please try again.');
-            });
+            if (response.ok) {
+                alert("Appointment Booked Successfully")
+            } else {
+                alert("Appointment Booking Failed")
+            }
         }
+
+        const fetchCities = async () => {
+            const response = await fetch('/getcities');
+            const cities = await response.json();
+
+            const cityDropdown = document.getElementById('city');
+
+            cities.forEach(city => {
+                const option = document.createElement('option');
+                option.value = city;
+                option.textContent = city;
+                cityDropdown.appendChild(option);
+            });
+        };
+
+        // Call fetchCities on page load
+        fetchCities();
+
+        // Fetch hospitals based on selected city
+        document.getElementById('city').addEventListener('change', async () => {
+            const selectedCity = document.getElementById('city').value;
+            const hospitalDropdown = document.getElementById('hospital');
+
+            // Fetch hospitals based on the selected city
+            const response = await fetch(`/gethospitals?city=${selectedCity}`);
+            const hospitals = await response.json();
+
+            // Clear existing options
+            hospitalDropdown.innerHTML = '<option value="" disabled selected>Select Hospital</option>';
+
+            // Populate hospitals in the dropdown
+            hospitals.forEach(hospital => {
+                const option = document.createElement('option');
+                option.value = hospital.name;
+                option.textContent = hospital.name;
+                hospitalDropdown.appendChild(option);
+            });
+        });
     </script>
-     <script src="../js/scripts.js"></script>
+    <script src="../js/scripts.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

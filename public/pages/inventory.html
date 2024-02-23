@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Hospital Inventory</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+
+    <!-- Font Awesome CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.20.0/font/bootstrap-icons.css" rel="stylesheet">
+</head>
+
+<body>
+
+    <header class="bg-primary text-white py-3">
+        <div class="container">
+            <h1 class="mb-0">Hospital Management System</h1>
+        </div>
+    
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link text-light" href="/pages/home.html"><i class="fas fa-user-md"></i> Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-light" href="/pages/doctor.html"><i class="fas fa-user-md"></i> Doctor</a>
+                    </li>
+                    <li id="booking" class="nav-item">
+                        <a class="nav-link text-light" href="/pages/index.html"><i class="fas fa-user"></i> Book Appointment</a>
+                    </li>
+                    <li id="inventory" class="nav-item">
+                        <a class="nav-link text-light" href="/pages/inventory.html"><i class="fas fa-user"></i> Inventory</a>
+                    </li>
+                    <li id="registerLink" class="nav-item">
+                        <a class="nav-link text-light" href="/pages/register.html"><i class="fas fa-user-plus"></i> Register</a>
+                    </li>
+                    <li id="loginLink" class="nav-item">
+                        <a class="nav-link text-light" href="/pages/login.html"><i class="fas fa-sign-in-alt"></i> Login</a>
+                    </li>
+                    <li id="logoutButton" class="nav-item">
+                        <a class="nav-link text-light" href="#"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                    </li>                    
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
+
+    <div class="container mt-5">
+        <h1 class="mb-4">Hospital Inventory</h1>
+
+        <!-- Hospital Search Form -->
+        <form id="hospitalForm" class="mb-4">
+            <div class="input-group">
+                <input type="text" class="form-control" id="hospitalName" placeholder="Enter Hospital Name" required>
+                <button type="button" class="btn btn-primary" onclick="fetchInventory()">Get Inventory</button>
+            </div>
+        </form>
+
+        <!-- Hospital List -->
+        <div class="row">
+            <!-- Display inventory data here based on user input -->
+            <div id="result"></div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and Popper.js (required for some Bootstrap features) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        async function fetchInventory() {
+            const hospitalName = document.getElementById('hospitalName').value;
+
+            try {
+                const response = await fetch(`/api/inventory?hospitalName=${encodeURIComponent(hospitalName)}`);
+                const data = await response.json();
+
+                // Handle the data and update the HTML
+                document.getElementById('result').innerHTML = `
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">${data.hospitalName}</h5>
+            <p class="card-text">
+                <i class="fas fa-medkit"></i> Medical Tools: ${data.inventoryData.medicalEquipment}
+            </p>
+            <p class="card-text">
+                <i class="fas fa-bed"></i> Beds: ${data.inventoryData.beds}
+            </p>
+        </div>
+    </div>
+`;
+
+            } catch (error) {
+                console.error('Error fetching inventory data:', error);
+            }
+        }
+    </script>
+    <script src="../js/scripts.js"></script>
+</body>
+
+</html>
