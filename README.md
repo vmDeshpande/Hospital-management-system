@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-# Hospital-Management-System
-=======
 # Hospital Management System
 
 A simple Hospital Management System implemented using HTML, CSS, JavaScript (Node.js with Express), and MongoDB.
@@ -89,4 +86,3 @@ npm start
 ## Contributing
 
 Contributions are welcome! Please feel free to open issues or submit pull requests.
->>>>>>> b62b6134380c011d643e29739edac7a87c75e646
