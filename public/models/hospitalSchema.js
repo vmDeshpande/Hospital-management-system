@@ -22,8 +22,23 @@ const hospitalSchema = new mongoose.Schema({
                             type: Number,
                             default: 0,
                         },
-                        // Add more inventory items as needed
                     },
+                    doctors: [
+                       {
+                        doctor_name: {
+                            type: String,
+                        },
+                        specialization: {
+                            type: String,
+                        },
+                        patient_id: {
+                            type: String,
+                        },
+                        working_days: {
+                            type: String,
+                        },
+                    }
+                    ],
                 }
             ]
         }

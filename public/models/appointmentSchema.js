@@ -31,6 +31,9 @@ const appointmentSchema = new mongoose.Schema({
         unique: false,
         required: false
     },
+    bed: {
+        type: String
+    }
     
 });
 

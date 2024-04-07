@@ -80,19 +80,37 @@ const Hospital = require('./public/models/hospitalSchema');
 //                 medicalEquipment: 100,
 //                 beds: 50,
 //             },
+//             doctors: [
+//                 {
+//                     doctor_name: "Dr. John Doe",
+//                     specialization: "General Medicine",
+//                     patient_id: "",
+//                     working_days: "Monday to Friday"
+//                 },
+//                 {
+//                     doctor_name: "Dr. Jane Smith",
+//                     specialization: "Pediatrics",
+//                     patient_id: "",
+//                     working_days: "Monday to Saturday"
+//                 }
+//             ]
 //         })),
 //     }));
 // };
 
-// const exampleHospital = new Hospital({
+// const hospitalData = {
 //     cities: addInventoryOptions(cityHospitalList),
-// });
+// };
+
+// const exampleHospital = new Hospital(hospitalData);
 
 // exampleHospital.save()
-//     .then(() => console.log('Example hospital entry with inventory saved'))
-//     .catch(error => console.error(`Error saving example hospital entry: ${error.message}`));
-
-
+//     .then(savedHospital => {
+//         console.log('Hospital data saved successfully:');
+//     })
+//     .catch(error => {
+//         console.error('Error saving hospital data:', error);
+//     });
 
 
 app.use(express.urlencoded({ extended: true }));
@@ -255,8 +273,24 @@ app.get('/getpatients', async (req, res) => {
 
 app.get('/getdoctors', async (req, res) => {
     try {
-        const Doctors = await Doctor.find();
-        res.json(Doctors);
+        const selectedHospital = req.query.hospital;
+        
+        // Query to find the specific hospital and retrieve its doctors
+        const hospital = await Hospital.findOne(
+            { 'cities.hospitals': { $elemMatch: { name: selectedHospital } } }
+        );
+
+       if(hospital) {      
+            const hospitalData = hospital.cities.find(city => city.hospitals.some(h => h.name === selectedHospital));
+            const doctorsList = hospitalData ? hospitalData.hospitals.find(h => h.name === selectedHospital).doctors || [] : [];
+            if(doctorsList){
+                res.json(doctorsList);
+            } else {
+                
+            }
+        } else {
+            
+        }
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: 'Internal Server Error' });
@@ -265,8 +299,27 @@ app.get('/getdoctors', async (req, res) => {
 
 app.post('/updatelab', async (req, res) => {
     try {
-        const { bed, patientID } = req.body;
+        const { bed, patientID, normalHospital, encodedHospital, city } = req.body;
+
+        // Update the bed count for the patient in the Post collection
         await Post.findOneAndUpdate({ id: patientID }, { bed: bed });
+
+        // Find the hospital in the specified city
+        const hospital = await Hospital.findOne({ 'cities.name': city, 'cities.hospitals.name': normalHospital });
+
+        // Update the inventory of the hospital
+        if (hospital) {
+            const cityIndex = hospital.cities.findIndex(cityy => cityy.name === city);
+            const hospitalIndex = hospital.cities[cityIndex].hospitals.findIndex(h => h.name === normalHospital);
+            if (hospitalIndex !== -1) {
+                hospital.cities[cityIndex].hospitals[hospitalIndex].inventory.beds -= bed;
+                await hospital.save();
+            } else {
+                console.log('Hospital not found in the city');
+            }
+        } else {
+            console.log('Hospital not found');
+        }
 
         res.status(200).json({ status: 'success' });
     } catch (err) {
@@ -274,6 +327,10 @@ app.post('/updatelab', async (req, res) => {
         res.status(500).json({ status: 'failed' });
     }
 });
+
+
+
+
 
 app.post('/deletedoctor', async (req, res) => {
     try {

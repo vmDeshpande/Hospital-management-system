@@ -103,9 +103,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
 
         if (response.ok) {
+          alert(`Registration successful.`)
             console.log('Registration successful.');
             // Redirect or perform any actions after successful registration
         } else {
+          alert(`Registration failed.`)
             console.error('Registration failed.');
             // Handle registration failure
         }
@@ -119,24 +121,49 @@ document.addEventListener("DOMContentLoaded", async () => {
         registerForm.addEventListener('submit', submitRegisterForm);
     }
 
-  const updateDoctors = async () => {
-    const response = await fetch("/getdoctors");
-    const doctors = await response.json();
-
-    doctorsDiv.innerHTML = "";
-
-    doctors.forEach((doctor) => {
-      const modificationDiv = document.createElement("tr");
-      modificationDiv.innerHTML = `
-                <td>${doctor.doctor_name}</td>
-                <td>${doctor.specialization}</td>
-                <td>${doctor.patient_id}</td>
-                <td>${doctor.working_days}</td>
-            `;
-
-      doctorsDiv.appendChild(modificationDiv);
-    });
+    const updateDoctors = async (selectedHospital) => {
+      try {
+        const encodedHospital = encodeURIComponent(selectedHospital);
+          const response = await fetch(`/getdoctors?hospital=${encodedHospital}`);
+          if (!response.ok) {
+              throw new Error(`Failed to fetch doctors: ${response.statusText}`);
+          }
+          const doctors = await response.json();
+  
+          // Assuming you have a div with the id "doctorsDiv" to display the doctors
+          const doctorsDiv = document.getElementById('doctorDiv');
+          doctorsDiv.innerHTML = "";
+  
+          if (!doctors) {
+              const noDoctorsRow = document.createElement("tr");
+              noDoctorsRow.innerHTML = `<td colspan="4">No doctors available for this hospital</td>`;
+              doctorsDiv.appendChild(noDoctorsRow);
+          } else {
+              doctors.forEach((doctor) => {
+                  const doctorRow = document.createElement("tr");
+                  doctorRow.innerHTML = `
+                      <td>${doctor.doctor_name}</td>
+                      <td>${doctor.specialization}</td>
+                      <td>${doctor.patient_id}</td>
+                      <td>${doctor.working_days}</td>
+                  `;
+                  doctorsDiv.appendChild(doctorRow);
+              });
+          }
+      } catch (error) {
+          console.error("Error updating doctors:", error);
+      }
   };
+  const Hospital = document.getElementById('hospital');
+  if(Hospital){  
+  // Event listener for the change event on the hospital dropdown
+  document.getElementById('hospital').addEventListener('change', (event) => {
+      const selectedHospital = event.target.value;
+      updateDoctors(selectedHospital);
+  });
+}
+  
+  
 
   const updatePatients = async (doctorName) => {
     const response = await fetch(`/getpatients?patient_name=${doctorName}`);
@@ -162,6 +189,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const bed = document.getElementById("bed").value;
     const patientID = document.getElementById("PID").value;
+    const city = document.getElementById("city1").value;
+    const encodedHospital = encodeURIComponent(document.getElementById("hospital1").value);
+    const normalHospital = document.getElementById("hospital1").value;
 
     const response = await fetch("/updatelab", {
       method: "POST",
@@ -171,11 +201,15 @@ document.addEventListener("DOMContentLoaded", async () => {
       body: JSON.stringify({
         bed,
         patientID,
+        encodedHospital,
+        city,
+        normalHospital
       }),
     });
 
     if (response.ok) {
       console.log("Patient data updated successfully with Lab ID.");
+      alert(`Patient data updated successfully with Lab ID.`)
     } else {
       console.error("Failed to update patient data with Lab ID.");
     }
@@ -193,6 +227,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
 
     if (response.ok) {
+      alert(`Doctor and associated patient data deleted successfully.`)
       console.log("Doctor and associated patient data deleted successfully.");
     } else {
       console.error("Failed to delete doctor and associated patient data.");
